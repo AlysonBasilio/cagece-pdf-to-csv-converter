@@ -29,7 +29,7 @@ const allFields = [
   'Data de Equilíbrio'
 ]
 
-module.exports = (item) => {
+export default function createReport(item) {
   return {
     y: item.y,
     nextReport: null,

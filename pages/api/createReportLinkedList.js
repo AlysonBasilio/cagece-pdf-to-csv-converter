@@ -1,4 +1,4 @@
-module.exports = () => {
+export default function createReportLinkedList() {
   return {
     head: null,
     addReport(report) {
