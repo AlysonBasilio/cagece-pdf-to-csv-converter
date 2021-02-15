@@ -12,8 +12,8 @@ import path from 'path'
 // middleware that process files uploaded in multipart/form-data format.
 const upload = multer({
   storage: multer.diskStorage({
-    destination: './public/uploads',
-    filename: (req, file, cb) => cb(null, file.originalname),
+    destination: '/tmp',
+    filename: (req, file, cb) => cb(null, 'file.pdf'),
   }),
 });
 
@@ -34,7 +34,7 @@ apiRoute.post((req, res) => {
   const pdfReader = new PdfReader();
   let reportLinkedList = createReportLinkedList();
 
-  pdfReader.parseFileItems("./public/uploads/file.pdf", function (err, item) {
+  pdfReader.parseFileItems("/tmp/file.pdf", function (err, item) {
     if (item && item.text) {
       if (item.text === " Dados de abertura") {
         let newReport = createReport(item);
@@ -58,9 +58,8 @@ apiRoute.post((req, res) => {
     const csvData = reportLinkedList.extractCsvData();
     const csvExporter = new ExportToCsv(options);
     const csv = csvExporter.generateCsv(csvData, true);
-    const file = './public/uploads/data.csv'
+    const file = '/tmp/data.csv'
     writeFileSync(file, csv);
-    // res.status(201).json({ path: '/public/uploads/data.csv' })
     var filename = path.basename(file);
     var mimetype = mime.getType(file);
 
