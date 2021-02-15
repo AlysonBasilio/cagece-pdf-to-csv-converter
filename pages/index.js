@@ -31,7 +31,11 @@ export default function Home() {
         <h1 className={styles.title}>
           Welcome to Cagece PDF to CSV converter
         </h1>
+        <p/>
+        <p/>
         { isUploading ? 'Wait' : <UiFileInputButton label="Upload Single File" uploadFileName="theFiles" onChange={onChange} /> }
+        <p/>
+        <p/>
         { downloadHref ? <a href={downloadHref} download={'data.csv'}>Download</a>: ''}
       </main>
 
