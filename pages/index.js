@@ -2,16 +2,22 @@ import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import UiFileInputButton from '../components/UiFileInputButton'
 import { uploadFileRequest } from '../services/uploader';
+import { useState } from 'react';
 
 export default function Home() {
+  const [isUploading, setIsUploading] = useState(false)
+  const [downloadHref, setDownloadHref] = useState('')
+
   const onChange = async (formData) => {
+    setIsUploading(true)
+    setDownloadHref('')
     const response = await uploadFileRequest(formData, (event) => {
       console.log(`Current progress:`, Math.round((event.loaded * 100) / event.total));
     });
 
-    console.log('response', response);
-    var encodedUri = encodeURI(`data:text/csv;charset=utf-8,${response}`);
-    window.open(encodedUri);
+    var encodedUri = `data:text/csv; charset=utf-8,${encodeURI(response)}`
+    setDownloadHref(encodedUri)
+    setIsUploading(false)
   };
 
   return (
@@ -25,8 +31,8 @@ export default function Home() {
         <h1 className={styles.title}>
           Welcome to Cagece PDF to CSV converter
         </h1>
-
-        <UiFileInputButton label="Upload Single File" uploadFileName="theFiles" onChange={onChange} />
+        { isUploading ? 'Wait' : <UiFileInputButton label="Upload Single File" uploadFileName="theFiles" onChange={onChange} /> }
+        { downloadHref ? <a href={downloadHref} download={'data.csv'}>Download</a>: ''}
       </main>
 
       <footer className={styles.footer}>
